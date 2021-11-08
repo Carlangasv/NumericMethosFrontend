@@ -52,7 +52,6 @@
                   type="number"
                   required
                 ></v-text-field>
-
               </v-col>
             </v-row>
 
@@ -86,8 +85,6 @@
                   type="number"
                   required
                 ></v-text-field>
-
-
               </v-col>
             </v-row>
 
@@ -108,12 +105,11 @@
 
               <v-col cols="12" sm="5">
                 <v-text-field
-                   v-model="data_s13l.y_list"
+                  v-model="data_s13l.y_list"
                   label="Ingrese los valores de y separados por comas"
                   type="text"
                   required
                 ></v-text-field>
-
               </v-col>
             </v-row>
 
@@ -134,31 +130,25 @@
 
               <v-col cols="12" sm="5">
                 <v-text-field
-                   v-model="data_s38l.y_list"
+                  v-model="data_s38l.y_list"
                   label="Ingrese los valores de y separados por comas"
                   type="text"
                   required
                 ></v-text-field>
-
               </v-col>
             </v-row>
 
             <v-btn @click="submitS38l">Aceptar</v-btn>
           </v-form>
         </div>
-
-        
       </v-card>
     </v-col>
   </v-row>
 </template>
 
-
 <script>
-
-import axios from 'axios'
-import config from '@/assets/config'
-
+import axios from "axios";
+import config from "@/assets/config";
 
 export default {
   data() {
@@ -166,143 +156,132 @@ export default {
       selected: null,
       items: [
         {
-          name: 'Simpson 1/3',
-          value: 'simpson13',
+          name: "Simpson 1/3",
+          value: "simpson13",
         },
         {
-          name: 'Simpson 3/8',
-          value: 'simpson38',
+          name: "Simpson 3/8",
+          value: "simpson38",
         },
 
         {
-          name: 'Simpson 1/3 con listas',
-          value: 'simpson13_list',
+          name: "Simpson 1/3 con listas",
+          value: "simpson13_list",
         },
         {
-          name: 'Simpson 3/8 con listas',
-          value: 'simpson38_list',
+          name: "Simpson 3/8 con listas",
+          value: "simpson38_list",
         },
       ],
 
       data_s13: {
-        f: '',
+        f: "",
         a: null,
         b: null,
         n: null,
-        
       },
 
       data_s38: {
-        f: '',
+        f: "",
         x0: null,
         xn: null,
       },
 
       data_s13l: {
-        x_list: '',
-        y_list: '',
+        x_list: "",
+        y_list: "",
       },
 
       data_s38l: {
-        x_list: '',
-        y_list: '',
+        x_list: "",
+        y_list: "",
       },
 
       show_s13: true,
       show_s38: false,
       show_s13l: false,
       show_s38l: false,
-      
-
-    }
-
-    
+    };
   },
 
   methods: {
     onChange(item) {
       switch (item.value) {
-        case 'simpson13':
+        case "simpson13":
           this.show_s13 = true;
           this.show_s38 = false;
           this.show_s13l = false;
           this.show_s38l = false;
           break;
 
-        case 'simpson38':
+        case "simpson38":
           this.show_s13 = false;
           this.show_s38 = true;
           this.show_s13l = false;
           this.show_s38l = false;
           break;
 
-        case 'simpson13_list':
+        case "simpson13_list":
           this.show_s13 = false;
           this.show_s38 = false;
           this.show_s13l = true;
           this.show_s38l = false;
           break;
-        case 'simpson38_list':
+        case "simpson38_list":
           this.show_s13 = false;
           this.show_s38 = false;
           this.show_s13l = false;
           this.show_s38l = true;
           break;
-        
       }
     },
 
-  async  submitS13() {
-
-      const URL = `${config.api}` + '/simpson_13'
-
+    async submitS13() {
+      const URL = `${config.api}` + "/simpson_13";
+      console.log(this.data_s13);
       var s13 = {
-        a: this.data_s13.a,
-        b: this.data_s13.b,
-        n: this.data_s13.n,
+        a: parseFloat(this.data_s13.a),
+        b: parseFloat(this.data_s13.b),
+        n: parseFloat(this.data_s13.n),
         funcion: this.data_s13.f,
-      } 
-
-      console.log(s13)
-      let { data } = await axios.post(URL, s13)
-      console.log('data: ', data)
-
+      };
+      let { data } = await axios.post(URL, s13);
     },
 
-   async submitS38() {
-     const URL = `${config.api}` + '/simpson_38'
+    async submitS38() {
+      const URL = `${config.api}` + "/simpson_38";
 
       var s38 = {
-        x0: this.data_s38.x0,
-        xn: this.data_s38.xn,
+        x0: parseFloat(this.data_s38.x0),
+        xn: parseFloat(this.data_s38.xn),
         funcion: this.data_s38.f,
-      } 
+      };
 
-      console.log(s38)
-      let { data } = await axios.post(URL, s38)
-      console.log('data: ', data)
+      console.log(s38);
+      let { data } = await axios.post(URL, s38);
     },
 
-    submitS13l() {
-      const URL = `${config.api}` + '/simpson_38'
-      x_list = this.data_s13l.x_list.split(',');
-      y_list = this.data_s13l.y_list.split(',');
-
-      var s13l = {
-        x: x_list,
-        fx: y_list,
-      } 
-
-      console.log(s13l)
-      //let { data } = await axios.post(URL, s13l)
-      //console.log('data: ', data)
-
+    async submitS13l()  {
+      const URL = `${config.api}` + "/simpson_13_list";
+      let x_list = this.data_s13l.x_list.split(",");
+      let y_list = this.data_s13l.y_list.split(",");
+      let s13l = {
+        x: x_list.map(x => parseFloat(x)),
+        fx: y_list.map(x => parseFloat(x)),
+      }
+      let { data } = await axios.post(URL, s13l)
     },
 
-    submitS38l() {
-      console.log(this.data_s38l)
+    async submitS38l() {
+      const URL = `${config.api}` + "/simpson_38_list";
+      let x_list = this.data_s38l.x_list.split(",");
+      let y_list = this.data_s38l.y_list.split(",");
+      let s38l = {
+        x: x_list.map(x => parseFloat(x)),
+        fx: y_list.map(x => parseFloat(x)),
+      }
+      let { data } = await axios.post(URL, s38l)  
     },
-
   },
-}
+};
 </script>

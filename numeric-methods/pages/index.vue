@@ -6,9 +6,7 @@
           Bienvenido
         </v-card-title>
         <v-card-text>
-         
         </v-card-text>
-        
       </v-card>
     </v-col>
   </v-row>

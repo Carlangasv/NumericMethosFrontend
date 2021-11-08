@@ -205,17 +205,14 @@ export default {
       const URL = `${config.api}/` + this.selected.value
 
       var rk = {
-        h: this.data_rk.h,
-        xf: this.data_rk.xf,
-        xi: this.data_rk.xi,
-        x: this.data_rk.x,
-        y: this.data_rk.y,
+        h: parseFloat(this.data_rk.h),
+        xf: parseFloat(this.data_rk.xf),
+        xi: parseFloat(this.data_rk.xi),
+        x: parseFloat(this.data_rk.x),
+        y: parseFloat(this.data_rk.y),
         funcion: this.data_rk.f,
       } 
-
-      console.log(rk4)
       let { data } = await axios.post(URL, rk)
-      console.log('data: ', data)
     },
 
    async submitRK4EDO() {
@@ -224,17 +221,13 @@ export default {
       const URL = `${config.api}/` + this.selected.value
 
       var rk4EDO = {
-        h: this.data_rk_edo.h,
-        xf: this.data_rk_edo.xf,
-        xi: this.data_rk_edo.xi,
+        h: parseFloat(this.data_rk_edo.h),
+        xf: parseFloat(this.data_rk_edo.xf),
+        xi: parseFloat(his.data_rk_edo.xi),
         ci: this.data_rk_edo.ci,
         funcion: this.data_rk_edo.f,
       } 
-
-      console.log(rk4EDO)
       let { data } = await axios.post(URL, rk4EDO)
-      console.log('data: ', data)
-
     },
   },
 }
