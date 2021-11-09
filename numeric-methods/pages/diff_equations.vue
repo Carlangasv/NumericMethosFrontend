@@ -93,8 +93,15 @@
                 ></v-text-field>
 
                 <v-text-field
-                  v-model="data_rk_edo.ci"
-                  label="Ingrese el valor de ci"
+                  v-model="data_rk_edo.h"
+                  label="Ingrese el valor de h"
+                  type="number"
+                  required
+                ></v-text-field>
+
+                <v-text-field
+                  v-model="data_rk_edo.ci.y1"
+                  label="Ingrese el valor de y1"
                   type="number"
                   required
                 ></v-text-field>
@@ -116,8 +123,15 @@
                 ></v-text-field>
 
                 <v-text-field
-                  v-model="data_rk_edo.h"
-                  label="Ingrese el valor de h"
+                  v-model="data_rk_edo.ci.x"
+                  label="Ingrese el valor inicial  de x"
+                  type="number"
+                  required
+                ></v-text-field>
+
+                <v-text-field
+                  v-model="data_rk_edo.ci.y2"
+                  label="Ingrese el valor inicial  de y2"
                   type="number"
                   required
                 ></v-text-field>
@@ -127,7 +141,29 @@
             <v-btn @click="submitRK4EDO">Aceptar</v-btn>
           </v-form>
         </div>
+        <v-container v-show="graph">
         <div id="plt" style="width: 600px; height: 250px"></div>
+         </v-container>
+        <div>
+          <v-simple-table dark v-show="tableEDO">
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th class="text-left">X</th>
+                  <th class="text-left">Y1</th>
+                  <th class="text-left">Y2</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in itemsEDO" :key="item.x">
+                  <td>{{ item.x }}</td>
+                  <td>{{ item.y1 }}</td>
+                  <td>{{ item.y2 }}</td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+        </div>
       </v-card>
     </v-col>
   </v-row>
@@ -141,6 +177,10 @@ export default {
   data() {
     return {
       selected: null,
+      headersEDO: ["x", "y1", "y2"],
+      itemsEDO: [],
+      tableEDO : false,
+      graph : false,
       items: [
         {
           name: "Runge-Kutta 4to Orden",
@@ -172,26 +212,22 @@ export default {
         xi: null,
         xf: null,
         xi: null,
-        ci: null,
+        ci: {
+          x: null,
+          y1: null,
+          y2: null,
+        },
       },
 
       show_rk: false,
       show_rk_edo: false,
-      data: [
-        {
-          x: [1, 2, 3, 4],
-          y: [10, 15, 13, 17],
-          type: "scatter",
-        },
-      ],
-      layout: {
-        title: "My graph",
-      },
     };
   },
 
   methods: {
     onChange(item) {
+      this.tableEDO = false
+      this.graph = false
       switch (item.value) {
         case "cuarto_orden":
           this.show_rk = true;
@@ -234,19 +270,31 @@ export default {
           margin: { t: 0 },
         }
       );
+      this.tableEDO = false
+      this.graph = true
     },
 
     async submitRK4EDO() {
       const URL = `${config.api}/` + this.selected.value;
 
+      let ci = [
+        [parseFloat(this.data_rk_edo.ci.x), parseFloat(this.data_rk_edo.ci.y1)],
+        [parseFloat(this.data_rk_edo.ci.x), parseFloat(this.data_rk_edo.ci.y2)],
+      ];
+
       var rk4EDO = {
         h: parseFloat(this.data_rk_edo.h),
         xf: parseFloat(this.data_rk_edo.xf),
-        xi: parseFloat(his.data_rk_edo.xi),
-        ci: this.data_rk_edo.ci,
-        funcion: this.data_rk_edo.f,
+        xi: parseFloat(this.data_rk_edo.xi),
+        ci: ci,
+        funciones: this.data_rk_edo.f,
       };
       let { data } = await axios.post(URL, rk4EDO);
+      for (let i = 0; i < data.x.length; i++) {
+        this.itemsEDO.push({ x: data.x[i], y1: data.y1[i], y2: data.y2[i] });
+      }
+      this.tableEDO = true
+      this.graph = false
     },
   },
 };
