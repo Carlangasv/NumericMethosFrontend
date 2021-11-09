@@ -1,5 +1,5 @@
 const config = {
-    api: 'http://localhost:5000',
+    api: 'https://methods-back.herokuapp.com/',
     
 
 }
