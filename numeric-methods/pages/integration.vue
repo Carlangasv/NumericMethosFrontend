@@ -141,6 +141,16 @@
             <v-btn @click="submitS38l">Aceptar</v-btn>
           </v-form>
         </div>
+
+        <div v-show="show_result">
+          <v-text-field
+            v-model="result"
+            label="Resultado"
+            type="text"
+            required
+            disabled
+          ></v-text-field>
+        </div>
       </v-card>
     </v-col>
   </v-row>
@@ -201,6 +211,7 @@ export default {
       show_s38: false,
       show_s13l: false,
       show_s38l: false,
+      show_result: false,
     };
   },
 
@@ -246,6 +257,8 @@ export default {
         funcion: this.data_s13.f,
       };
       let { data } = await axios.post(URL, s13);
+      this.result = `El resultado es ${data.res}`;
+      this.show_result = true;
     },
 
     async submitS38() {
@@ -257,8 +270,9 @@ export default {
         funcion: this.data_s38.f,
       };
 
-      console.log(s38);
       let { data } = await axios.post(URL, s38);
+      this.result = `El resultado es ${data.res}`;
+      this.show_result = true;
     },
 
     async submitS13l() {
@@ -278,6 +292,8 @@ export default {
             fx: y_list.map((x) => parseFloat(x)),
           };
           let { data } = await axios.post(URL, s13l);
+          this.result = `El resultado es ${data.res}`;
+          this.show_result = true;
         } catch (error) {
           alert(
             "Hubo un problema, por favor escriba los datos correctamente (numeros separados por comas"
@@ -304,6 +320,8 @@ export default {
             fx: y_list.map((x) => parseFloat(x)),
           };
           let { data } = await axios.post(URL, s38l);
+          this.result = `El resultado es ${data.res}`;
+          this.show_result = true;
         } catch (error) {
           alert(
             "Hubo un problema, por favor escriba los datos correctamente (numeros separados por comas"

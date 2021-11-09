@@ -1,5 +1,6 @@
 <template>
   <v-row justify="center" align="center">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <v-col cols="12" sm="10" md="12">
       <v-card>
         <v-card-title class="headline"> Ecuaciones Diferenciales </v-card-title>
@@ -126,18 +127,15 @@
             <v-btn @click="submitRK4EDO">Aceptar</v-btn>
           </v-form>
         </div>
-        <Plotly :data="data" :layout="layout" :display-mode-bar="false"></Plotly>
+        <div id="plt" style="width: 600px; height: 250px"></div>
       </v-card>
     </v-col>
   </v-row>
 </template>
 
-
 <script>
-import axios from 'axios'
-import config from '@/assets/config'
-import { Plotly } from 'vue-plotly'
-
+import axios from "axios";
+import config from "@/assets/config";
 
 export default {
   data() {
@@ -145,22 +143,22 @@ export default {
       selected: null,
       items: [
         {
-          name: 'Runge-Kutta 4to Orden',
-          value: 'cuarto_orden',
+          name: "Runge-Kutta 4to Orden",
+          value: "cuarto_orden",
         },
         {
-          name: 'Runge-Kutta Orden Superior',
-          value: 'orden_superior',
+          name: "Runge-Kutta Orden Superior",
+          value: "orden_superior",
         },
 
         {
-          name: 'Runge-Kutta 4to Orden ED Ordinaria',
-          value: 'cuarto_orden_edo',
+          name: "Runge-Kutta 4to Orden ED Ordinaria",
+          value: "cuarto_orden_edo",
         },
       ],
 
       data_rk: {
-        f: '',
+        f: "",
         h: null,
         xi: null,
         xf: null,
@@ -169,7 +167,7 @@ export default {
       },
 
       data_rk_edo: {
-        f: ['', ''],
+        f: ["", ""],
         h: null,
         xi: null,
         xf: null,
@@ -179,42 +177,41 @@ export default {
 
       show_rk: false,
       show_rk_edo: false,
-      data:[{
-        x: [1,2,3,4],
-        y: [10,15,13,17],
-        type:"scatter"
-      }],
-      layout:{
-        title: "My graph"
-      }
-    }
+      data: [
+        {
+          x: [1, 2, 3, 4],
+          y: [10, 15, 13, 17],
+          type: "scatter",
+        },
+      ],
+      layout: {
+        title: "My graph",
+      },
+    };
   },
 
   methods: {
     onChange(item) {
       switch (item.value) {
-        case 'cuarto_orden':
-          this.show_rk = true
-          this.show_rk_edo = false
-          break
+        case "cuarto_orden":
+          this.show_rk = true;
+          this.show_rk_edo = false;
+          break;
 
-        case 'orden_superior':
-          this.show_rk = true
-          this.show_rk_edo = false
-          break
+        case "orden_superior":
+          this.show_rk = true;
+          this.show_rk_edo = false;
+          break;
 
-        case 'cuarto_orden_edo':
-          this.show_rk = false
-          this.show_rk_edo = true
-          break
+        case "cuarto_orden_edo":
+          this.show_rk = false;
+          this.show_rk_edo = true;
+          break;
       }
     },
 
     async submitRK() {
-      console.log(this.data_rk)
-
-      const URL = `${config.api}/` + this.selected.value
-
+      const URL = `${config.api}/` + this.selected.value;
       var rk = {
         h: parseFloat(this.data_rk.h),
         xf: parseFloat(this.data_rk.xf),
@@ -222,14 +219,25 @@ export default {
         x: parseFloat(this.data_rk.x),
         y: parseFloat(this.data_rk.y),
         funcion: this.data_rk.f,
-      } 
-      let { data } = await axios.post(URL, rk)
+      };
+      let { data } = await axios.post(URL, rk);
+      let plt = document.getElementById("plt");
+      Plotly.newPlot(
+        plt,
+        [
+          {
+            x: data.x,
+            y: data.y,
+          },
+        ],
+        {
+          margin: { t: 0 },
+        }
+      );
     },
 
-   async submitRK4EDO() {
-      console.log(this.data_rk_edo)
-
-      const URL = `${config.api}/` + this.selected.value
+    async submitRK4EDO() {
+      const URL = `${config.api}/` + this.selected.value;
 
       var rk4EDO = {
         h: parseFloat(this.data_rk_edo.h),
@@ -237,9 +245,9 @@ export default {
         xi: parseFloat(his.data_rk_edo.xi),
         ci: this.data_rk_edo.ci,
         funcion: this.data_rk_edo.f,
-      } 
-      let { data } = await axios.post(URL, rk4EDO)
+      };
+      let { data } = await axios.post(URL, rk4EDO);
     },
   },
-}
+};
 </script>
