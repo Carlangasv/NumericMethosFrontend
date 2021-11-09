@@ -126,6 +126,7 @@
             <v-btn @click="submitRK4EDO">Aceptar</v-btn>
           </v-form>
         </div>
+        <Plotly :data="data" :layout="layout" :display-mode-bar="false"></Plotly>
       </v-card>
     </v-col>
   </v-row>
@@ -135,6 +136,8 @@
 <script>
 import axios from 'axios'
 import config from '@/assets/config'
+import { Plotly } from 'vue-plotly'
+
 
 export default {
   data() {
@@ -176,6 +179,14 @@ export default {
 
       show_rk: false,
       show_rk_edo: false,
+      data:[{
+        x: [1,2,3,4],
+        y: [10,15,13,17],
+        type:"scatter"
+      }],
+      layout:{
+        title: "My graph"
+      }
     }
   },
 
