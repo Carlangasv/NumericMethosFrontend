@@ -261,26 +261,56 @@ export default {
       let { data } = await axios.post(URL, s38);
     },
 
-    async submitS13l()  {
+    async submitS13l() {
       const URL = `${config.api}` + "/simpson_13_list";
       let x_list = this.data_s13l.x_list.split(",");
       let y_list = this.data_s13l.y_list.split(",");
-      let s13l = {
-        x: x_list.map(x => parseFloat(x)),
-        fx: y_list.map(x => parseFloat(x)),
+      if (x_list.length != y_list.length) {
+        alert("El tamaño de las listas deben ser iguales");
+        return;
+      } else if (x_list.length < 3 || y_list.length < 3) {
+        alert("El tamaño de las listas debe contener al menos 3 valores");
+        return;
+      } else {
+        try {
+          let s13l = {
+            x: x_list.map((x) => parseFloat(x)),
+            fx: y_list.map((x) => parseFloat(x)),
+          };
+          let { data } = await axios.post(URL, s13l);
+        } catch (error) {
+          alert(
+            "Hubo un problema, por favor escriba los datos correctamente (numeros separados por comas"
+          );
+          return;
+        }
       }
-      let { data } = await axios.post(URL, s13l)
     },
 
     async submitS38l() {
       const URL = `${config.api}` + "/simpson_38_list";
       let x_list = this.data_s38l.x_list.split(",");
       let y_list = this.data_s38l.y_list.split(",");
-      let s38l = {
-        x: x_list.map(x => parseFloat(x)),
-        fx: y_list.map(x => parseFloat(x)),
+      if (x_list.length != y_list.length) {
+        alert("El tamaño de las listas deben ser iguales");
+        return;
+      } else if (x_list.length < 3 || y_list.length < 3) {
+        alert("El tamaño de las listas debe contener al menos 3 valores");
+        return;
+      } else {
+        try {
+          let s38l = {
+            x: x_list.map((x) => parseFloat(x)),
+            fx: y_list.map((x) => parseFloat(x)),
+          };
+          let { data } = await axios.post(URL, s38l);
+        } catch (error) {
+          alert(
+            "Hubo un problema, por favor escriba los datos correctamente (numeros separados por comas"
+          );
+          return;
+        }
       }
-      let { data } = await axios.post(URL, s38l)  
     },
   },
 };
